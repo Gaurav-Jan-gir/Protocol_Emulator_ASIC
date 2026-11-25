@@ -1,0 +1,45 @@
+[*]
+[*] GTKWave Analyzer v3.3 - ProtoPlex-8 SPI Loopback Waveform
+[*]
+[dumpfile] "spi_loopback.vcd"
+[savefile] "waves/spi_loopback.gtkw"
+[timestart] 0
+[size] 1440 900
+[pos] -1 -1
+*-signals-
+@28
+tb_spi_loopback.clk
+tb_spi_loopback.rst_n
+@200
+-Host SPI Control Interface
+@28
+tb_spi_loopback.host_cs_n
+tb_spi_loopback.host_sclk
+tb_spi_loopback.host_mosi
+@200
+-SPI Physical Bus (Engine 0 Master <-> Engine 1 Slave)
+@28
+tb_spi_loopback.uio_out[0]
+tb_spi_loopback.uio_out[1]
+tb_spi_loopback.uio_out[2]
+tb_spi_loopback.uio_in[3]
+@22
+tb_spi_loopback.uio_oe[7:0]
+@200
+-Engine 0: SPI Master Execution
+@22
+tb_spi_loopback.u_dut.u_engine_0.pc[4:0]
+tb_spi_loopback.u_dut.u_engine_0.imem_inst[15:0]
+tb_spi_loopback.u_dut.u_engine_0.reg_x[15:0]
+tb_spi_loopback.u_dut.u_engine_0.osr_val[15:0]
+tb_spi_loopback.u_dut.u_engine_0.isr_val[15:0]
+@200
+-Engine 1: SPI Slave Execution
+@22
+tb_spi_loopback.u_dut.u_engine_1.pc[4:0]
+tb_spi_loopback.u_dut.u_engine_1.imem_inst[15:0]
+tb_spi_loopback.u_dut.u_engine_1.reg_x[15:0]
+tb_spi_loopback.u_dut.u_engine_1.osr_val[15:0]
+tb_spi_loopback.u_dut.u_engine_1.isr_val[15:0]
+[pattern_trace] 1
+[pattern_trace] 0

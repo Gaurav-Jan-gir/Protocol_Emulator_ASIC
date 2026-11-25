@@ -1,0 +1,29 @@
+[*]
+[*] GTKWave Analyzer v3.3 - ProtoPlex-8 Tiny Tapeout Top Wrapper Waveform
+[*]
+[dumpfile] "tinytapeout_top.vcd"
+[savefile] "waves/tinytapeout_top.gtkw"
+[timestart] 0
+[size] 1440 900
+[pos] -1 -1
+*-signals-
+@28
+tb_tinytapeout_top.clk
+tb_tinytapeout_top.rst_n
+tb_tinytapeout_top.ena
+@200
+-Tiny Tapeout 24-Pin Standard Bus
+@22
+tb_tinytapeout_top.ui_in[7:0]
+tb_tinytapeout_top.uo_out[7:0]
+tb_tinytapeout_top.uio_in[7:0]
+tb_tinytapeout_top.uio_out[7:0]
+tb_tinytapeout_top.uio_oe[7:0]
+@200
+-Internal Host SPI Control Registers
+@22
+tb_tinytapeout_top.u_dut.reg_ctrl[15:0]
+tb_tinytapeout_top.u_dut.status_word[15:0]
+tb_tinytapeout_top.u_dut.reg_pin_mode[15:0]
+[pattern_trace] 1
+[pattern_trace] 0

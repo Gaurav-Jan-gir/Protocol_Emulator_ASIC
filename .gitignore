@@ -1,0 +1,41 @@
+#=============================================================================
+# ProtoPlex-8 Protocol Emulator ASIC - .gitignore
+# Target PDK: IHP 130nm CMOS (SG13G2) / Tiny Tapeout TT08
+#=============================================================================
+
+# Compiled simulation binaries
+sim_*
+*.vvp
+*.out
+*.exe
+
+# Simulation waveform dumps (regenerated via 'make test')
+*.vcd
+*.saif
+*.vpd
+
+# Simulation and temporary logs
+*.log
+/tmp/*.log
+/tmp/iverilog_err.log
+
+# LaTeX build artifacts (Track docs/proto_emulator_spec.pdf and figures!)
+docs/*.aux
+docs/*.log
+docs/*.out
+docs/*.toc
+docs/*.synctex.gz
+docs/*.fls
+docs/*.fdb_latexmk
+docs/figures/src/*.aux
+docs/figures/src/*.log
+docs/figures/src/*.out
+docs/figures/src/*.pdf
+
+# OS and Editor temporary files
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+.vscode/.history/

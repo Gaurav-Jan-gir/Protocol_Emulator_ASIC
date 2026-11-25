@@ -1,0 +1,37 @@
+[*]
+[*] GTKWave Analyzer v3.3 - ProtoPlex-8 I2C Open-Drain Bus Waveform
+[*]
+[dumpfile] "i2c_bus.vcd"
+[savefile] "waves/i2c_bus.gtkw"
+[timestart] 0
+[size] 1440 900
+[pos] -1 -1
+*-signals-
+@28
+tb_i2c_bus.clk
+tb_i2c_bus.rst_n
+@200
+-I2C Bus Physical Signals (Open-Drain Pull-Up Emulation)
+@28
+tb_i2c_bus.bus_scl
+tb_i2c_bus.bus_sda
+tb_i2c_bus.start_detected
+tb_i2c_bus.stop_detected
+@22
+tb_i2c_bus.slave_rx_byte[7:0]
+@200
+-I2C Hardware Output Enables (Active-Low Pull-Down)
+@28
+tb_i2c_bus.uio_oe[0]
+tb_i2c_bus.uio_oe[1]
+tb_i2c_bus.uio_out[0]
+tb_i2c_bus.uio_out[1]
+@200
+-Engine 0: I2C Master Sequencer
+@22
+tb_i2c_bus.u_dut.u_engine_0.pc[4:0]
+tb_i2c_bus.u_dut.u_engine_0.imem_inst[15:0]
+tb_i2c_bus.u_dut.u_engine_0.reg_x[15:0]
+tb_i2c_bus.u_dut.u_engine_0.osr_val[15:0]
+[pattern_trace] 1
+[pattern_trace] 0

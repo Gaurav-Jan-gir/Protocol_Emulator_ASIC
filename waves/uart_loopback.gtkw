@@ -1,0 +1,44 @@
+[*]
+[*] GTKWave Analyzer v3.3 - ProtoPlex-8 UART Loopback Waveform
+[*]
+[dumpfile] "uart_loopback.vcd"
+[savefile] "waves/uart_loopback.gtkw"
+[timestart] 0
+[size] 1440 900
+[pos] -1 -1
+*-signals-
+@28
+tb_uart_loopback.clk
+tb_uart_loopback.rst_n
+@200
+-Host SPI Control Interface
+@28
+tb_uart_loopback.host_cs_n
+tb_uart_loopback.host_sclk
+tb_uart_loopback.host_mosi
+@22
+tb_uart_loopback.u_dut.reg_ctrl[15:0]
+@200
+-UART Physical Pins (Crossbar Mapped)
+@28
+tb_uart_loopback.uio_out[0]
+tb_uart_loopback.uio_in[1]
+@22
+tb_uart_loopback.uio_oe[7:0]
+tb_uart_loopback.uo_out[7:0]
+@200
+-Engine 0: UART TX State
+@22
+tb_uart_loopback.u_dut.u_engine_0.pc[4:0]
+tb_uart_loopback.u_dut.u_engine_0.imem_inst[15:0]
+tb_uart_loopback.u_dut.u_engine_0.reg_x[15:0]
+tb_uart_loopback.u_dut.u_engine_0.osr_val[15:0]
+@200
+-Engine 1: UART RX State
+@22
+tb_uart_loopback.u_dut.u_engine_1.pc[4:0]
+tb_uart_loopback.u_dut.u_engine_1.imem_inst[15:0]
+tb_uart_loopback.u_dut.u_engine_1.reg_x[15:0]
+tb_uart_loopback.u_dut.u_engine_1.isr_val[15:0]
+[pattern_trace] 1
+[pattern_trace] 0
