@@ -20,22 +20,22 @@ help:
 	@echo "  make clean     - Remove simulation binaries, waveforms, and build artifacts"
 
 test:
-	@bash scripts/run_all_tests.sh
+	@python3 scripts/run_all_tests.py 2>/dev/null || python scripts/run_all_tests.py 2>/dev/null || bash scripts/run_all_tests.sh
 
 wave-uart:
-	@bash scripts/view_waveforms.sh uart
+	@python3 scripts/view_waveforms.py uart 2>/dev/null || bash scripts/view_waveforms.sh uart
 
 wave-spi:
-	@bash scripts/view_waveforms.sh spi
+	@python3 scripts/view_waveforms.py spi 2>/dev/null || bash scripts/view_waveforms.sh spi
 
 wave-i2c:
-	@bash scripts/view_waveforms.sh i2c
+	@python3 scripts/view_waveforms.py i2c 2>/dev/null || bash scripts/view_waveforms.sh i2c
 
 wave-top:
-	@bash scripts/view_waveforms.sh top
+	@python3 scripts/view_waveforms.py top 2>/dev/null || bash scripts/view_waveforms.sh top
 
 wave-all:
-	@bash scripts/view_waveforms.sh all
+	@python3 scripts/view_waveforms.py all 2>/dev/null || bash scripts/view_waveforms.sh all
 
 asm:
 	@echo "Assembling protocol microcode libraries..."

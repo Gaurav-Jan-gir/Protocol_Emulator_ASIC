@@ -25,7 +25,13 @@ Protocols are executed purely via compact, runtime-programmable microcode stored
 7. [Asynchronous Clock Recovery & Multi-Baud Auto-Detection](#asynchronous-clock-recovery--multi-baud-auto-detection)
 8. [Verification & Simulation Results](#verification--simulation-results)
 9. [Interactive GTKWave Simulation Viewing](#interactive-gtkwave-simulation-viewing)
-10. [Quick Start & Build Instructions](#quick-start--build-instructions)
+10. [Cross-Platform Simulation Guide (Windows / Linux / macOS)](#-cross-platform-simulation-guide-windows--linux--macos)
+    * [10.1 Toolchain Installation Matrix](#1-toolchain-installation-matrix)
+    * [10.2 Running Full Verification Suite](#2-running-the-full-verification-suite)
+    * [10.3 Running Individual Testbenches Manually](#3-running-individual-testbenches-manually)
+    * [10.4 Viewing Waveforms Cross-Platform](#4-viewing-waveforms-cross-platform)
+    * [10.5 Reassembling Microcode Protocols](#5-reassembling-microcode-protocols)
+    * [10.6 Cross-Platform Troubleshooting & FAQ](#6-cross-platform-troubleshooting--faq)
 11. [Repository Structure](#repository-structure)
 12. [Specification Document](#specification-document)
 
@@ -236,32 +242,269 @@ make wave-all
 
 ---
 
-## 🚀 Quick Start & Build Instructions
+## 💻 Cross-Platform Simulation Guide (Windows / Linux / macOS)
 
-### Prerequisites
-* **Icarus Verilog** (`iverilog` v12.0+) and `vvp`
-* **GTKWave** (for waveform inspection)
-* **Python 3.8+** (for protocol microcode assembler)
-* **pdfLaTeX** with TeX Live (for compiling the LaTeX specification)
+This guide provides step-by-step instructions to simulate ProtoPlex-8, run all 5 hardware verification testbenches, inspect interactive simulation waveforms, and assemble protocol microcode on **Windows**, **macOS**, and **Linux**.
 
-### Build Targets
+---
+
+### 1. Toolchain Installation Matrix
+
+ProtoPlex-8 uses open-source simulation tools (**Icarus Verilog** and **GTKWave**) and standard **Python 3.8+** (no external pip dependencies required).
+
+#### 🪟 Windows (Windows 10 / 11)
+
+Choose one of three straightforward methods:
+
+* **Option A: Scoop (Fastest & Cleanest)**
+  Open PowerShell (as regular user) and run:
+  ```powershell
+  # Install Scoop if not already installed:
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+  Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+
+  # Install Icarus Verilog, GTKWave, Python, and Make:
+  scoop install icarus-verilog gtkwave python make
+  ```
+
+* **Option B: Chocolatey**
+  Open an Administrator PowerShell and run:
+  ```powershell
+  choco install iverilog gtkwave python make -y
+  ```
+
+* **Option C: Pre-Compiled Windows Installer**
+  1. Download the Icarus Verilog Windows installer (`iverilog-v12...exe`) from [bleyer.org/icarus](http://bleyer.org/icarus/).
+  2. Run the installer and **ensure "Add executable folder(s) to user PATH" is checked**.
+  3. Download GTKWave for Windows from [gtkwave.sourceforge.net](https://gtkwave.sourceforge.net/) and extract/add to PATH.
+  4. Ensure Python 3 is installed from [python.org](https://www.python.org/) or the Microsoft Store.
+
+* **Option D: Windows Subsystem for Linux (WSL2)**
+  ```powershell
+  wsl --install -d Ubuntu
+  ```
+  Inside WSL Ubuntu, follow the Ubuntu instructions below.
+
+---
+
+#### 🍎 macOS (Apple Silicon M1/M2/M3/M4 & Intel)
+
+Install via [Homebrew](https://brew.sh/):
+```bash
+brew update
+brew install icarus-verilog gtkwave python3 make
+```
+
+> **Note for macOS Gatekeeper with GTKWave**: If macOS prevents GTKWave GUI from opening due to Gatekeeper, run:
+> ```bash
+> xattr -cr /Applications/gtkwave.app 2>/dev/null || true
+> ```
+> Or install the cask version: `brew install --cask gtkwave`
+
+---
+
+#### 🐧 Linux (Ubuntu, Debian, Fedora, RHEL, Arch)
+
+* **Ubuntu / Debian / Linux Mint**:
+  ```bash
+  sudo apt update
+  sudo apt install -y iverilog gtkwave python3 make
+  ```
+
+* **Fedora / RHEL / CentOS / Rocky Linux**:
+  ```bash
+  sudo dnf install -y iverilog gtkwave python3 make
+  ```
+
+* **Arch Linux / Manjaro**:
+  ```bash
+  sudo pacman -S --needed iverilog gtkwave python make
+  ```
+
+---
+
+### 2. Running the Full Verification Suite
+
+First, clone the repository and navigate into the project directory:
+```bash
+git clone https://github.com/Gaurav-Jan-gir/Protocol_Emulator_ASIC.git
+cd Protocol_Emulator_ASIC
+```
+
+#### Method A: Universal Python Test Runner (Recommended for All OSes)
+The included Python verification script works identically on **Windows PowerShell/CMD**, **macOS Terminal**, and **Linux Bash** without requiring `make` or shell utilities:
 
 ```bash
-# 1. Run all 5 hardware verification testbenches (takes ~5 seconds)
-make test
+# Windows (PowerShell or Command Prompt):
+python scripts/run_all_tests.py
 
-# 2. Reassemble all protocol microcode files from .asm to .hex
-make asm
-
-# 3. Compile the comprehensive 26-page specification PDF
-make docs
-
-# 4. Open simulation waveforms in GTKWave
-make wave-all
-
-# 5. Clean temporary build and simulation files
-make clean
+# Linux / macOS:
+python3 scripts/run_all_tests.py
 ```
+
+**Expected Terminal Output:**
+```text
+======================================================================
+      ProtoPlex-8 ASIC Cross-Platform Hardware Verification Suite      
+======================================================================
+Platform  : win32 / linux / darwin
+Target PDK: IHP 130nm CMOS (SG13G2) / Tiny Tapeout TT08
+Simulator : Icarus Verilog (iverilog + vvp)
+----------------------------------------------------------------------
+Running [engine] Micro-Engine Unit Test (ALU, Delay Counters, Branching) ... [PASS 100%]
+Running [uart  ] UART Full-Duplex Loopback (TX 0xA5, RX Eye Centering)   ... [PASS 100%]
+Running [spi   ] SPI Full-Duplex Master/Slave Loopback (5 MHz SCLK)      ... [PASS 100%]
+Running [i2c   ] I2C Bus Open-Drain Physical Layer (START, Addr, ACK)   ... [PASS 100%]
+Running [tt_top] Tiny Tapeout Top Wrapper (24-pad I/O, Power Gate ena)   ... [PASS 100%]
+----------------------------------------------------------------------
+Verification Summary: 5 Passed, 0 Failed out of 5 Testbenches
+======================================================================
+>>> ALL HARDWARE SIMULATION TESTS PASSED CLEANLY! <<<
+```
+
+#### Method B: Using Make (Linux / macOS / WSL)
+```bash
+make test
+```
+
+---
+
+### 3. Running Individual Testbenches Manually
+
+If you want to compile and execute a specific protocol testbench directly from the command line:
+
+#### 1. UART Loopback Test (`tb/tb_uart_loopback.v`):
+```bash
+# Compile synthesizable RTL + testbench:
+iverilog -g2001 -o sim_uart.vvp tb/tb_uart_loopback.v rtl/*.v
+
+# Execute simulation (generates uart_loopback.vcd):
+vvp sim_uart.vvp
+```
+
+#### 2. SPI Full-Duplex Loopback Test (`tb/tb_spi_loopback.v`):
+```bash
+iverilog -g2001 -o sim_spi.vvp tb/tb_spi_loopback.v rtl/*.v
+vvp sim_spi.vvp
+```
+
+#### 3. I2C Open-Drain Bus Test (`tb/tb_i2c_bus.v`):
+```bash
+iverilog -g2001 -o sim_i2c.vvp tb/tb_i2c_bus.v rtl/*.v
+vvp sim_i2c.vvp
+```
+
+#### 4. Micro-Engine ALU & Pipeline Test (`tb/tb_proto_engine.v`):
+```bash
+iverilog -g2001 -o sim_engine.vvp tb/tb_proto_engine.v rtl/*.v
+vvp sim_engine.vvp
+```
+
+#### 5. Tiny Tapeout Top-Level Pad Wrapper Test (`tb/tb_tinytapeout_top.v`):
+```bash
+iverilog -g2001 -o sim_top.vvp tb/tb_tinytapeout_top.v rtl/*.v
+vvp sim_top.vvp
+```
+
+---
+
+### 4. Viewing Waveforms Cross-Platform
+
+Every simulation automatically dumps a high-fidelity `.vcd` waveform file. Pre-configured `.gtkw` save files are provided in `waves/` so that clock signals, host SPI transactions, physical pin states, and micro-engine registers appear pre-grouped and color-coded.
+
+#### Method A: Python Waveform Launcher (Windows / Linux / macOS)
+```bash
+# Launch a specific simulation trace:
+python scripts/view_waveforms.py uart   # UART TX/RX trace
+python scripts/view_waveforms.py spi    # SPI Mode 0 5 MHz trace
+python scripts/view_waveforms.py i2c    # I2C open-drain trace
+python scripts/view_waveforms.py top    # Tiny Tapeout top-level trace
+
+# Or open all 4 simulation windows at once:
+python scripts/view_waveforms.py all
+```
+*(On Linux, `python3 scripts/view_waveforms.py ...`)*
+
+#### Method B: Make Targets (Linux / macOS / WSL)
+```bash
+make wave-uart    # Open UART waveform
+make wave-spi     # Open SPI waveform
+make wave-i2c     # Open I2C waveform
+make wave-top     # Open Top wrapper waveform
+make wave-all     # Open all 4 waveforms simultaneously
+```
+
+#### Method C: Direct GTKWave Command Line
+```bash
+gtkwave uart_loopback.vcd waves/uart_loopback.gtkw
+gtkwave spi_loopback.vcd waves/spi_loopback.gtkw
+gtkwave i2c_bus.vcd waves/i2c_bus.gtkw
+gtkwave tinytapeout_top.vcd waves/tinytapeout_top.gtkw
+```
+
+#### 💡 GTKWave Navigation Shortcuts:
+* **Fit to Window**: Press `Ctrl + Shift + F` (or menu `Time -> Zoom -> Zoom Best Fit`).
+* **Zoom In / Out**: Press `Ctrl + Plus` / `Ctrl + Minus` (or `Ctrl + Mouse Scroll Wheel`).
+* **Add Marker**: Click anywhere on the waveform canvas to drop a vertical measurement line.
+* **Measure Delta**: Middle-click or drag between two points to view exact time delta ($\Delta t$) and frequency ($1/\Delta t$).
+
+---
+
+### 5. Reassembling Microcode Protocols
+
+The protocol firmware library is written in custom microcode assembly (`asm/protocols/*.asm`) and assembled into 16-bit hex machine code:
+
+```bash
+# Windows (PowerShell or CMD):
+python asm/assembler.py asm/protocols/uart_tx.asm -o asm/protocols/uart_tx.hex
+python asm/assembler.py asm/protocols/uart_rx.asm -o asm/protocols/uart_rx.hex
+python asm/assembler.py asm/protocols/spi_master.asm -o asm/protocols/spi_master.hex
+python asm/assembler.py asm/protocols/spi_slave.asm -o asm/protocols/spi_slave.hex
+python asm/assembler.py asm/protocols/i2c_master.asm -o asm/protocols/i2c_master.hex
+python asm/assembler.py asm/protocols/one_wire_master.asm -o asm/protocols/one_wire_master.hex
+
+# Linux / macOS (using Makefile):
+make asm
+```
+
+---
+
+### 6. Cross-Platform Troubleshooting & FAQ
+
+#### Q1: On Windows, I get `'iverilog' is not recognized as an internal or external command`
+* **Cause**: Icarus Verilog is either not installed or its `bin` folder is missing from your system `PATH`.
+* **Fix**:
+  1. If you installed via the official Windows installer, default directory is `C:\iverilog\bin`.
+  2. Press `Win + R`, type `sysdm.cpl`, click **Advanced** $ightarrow$ **Environment Variables**.
+  3. Under **System Variables**, edit `Path` and append `C:\iverilog\bin`.
+  4. Restart your PowerShell or Command Prompt.
+
+#### Q2: On Windows PowerShell, I get `running scripts is disabled on this system`
+* **Cause**: PowerShell's default execution policy restricts `.ps1` execution.
+* **Fix**: Run PowerShell as Administrator and execute:
+  ```powershell
+  Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+  ```
+
+#### Q3: On macOS, GTKWave crashes or says "App cannot be opened"
+* **Cause**: macOS Gatekeeper blocks binaries without notarization.
+* **Fix**: Run:
+  ```bash
+  xattr -cr /Applications/gtkwave.app
+  ```
+  Or install the CLI version via Homebrew: `brew install gtkwave`.
+
+#### Q4: On Linux with Wayland, GTKWave opens with a blank or black window
+* **Cause**: GTK3 Wayland backend incompatibility on certain desktop environments.
+* **Fix**: Prepend `GDK_BACKEND=x11`:
+  ```bash
+  GDK_BACKEND=x11 gtkwave uart_loopback.vcd waves/uart_loopback.gtkw
+  ```
+  *(Note: The provided script `python scripts/view_waveforms.py` handles this automatically).*
+
+#### Q5: Can I simulate without installing Make?
+* **Yes!** The test runner `python scripts/run_all_tests.py` and waveform viewer `python scripts/view_waveforms.py` have zero dependencies beyond standard Python, making `make` completely optional on Windows.
+
 
 ---
 
